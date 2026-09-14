@@ -351,15 +351,60 @@
   veil.addEventListener("click", function(e){ if (e.target === veil) abrir(); });
 
   /* ══════════════════════════════════════════════════════════
-     3 · AGENDAR (.ics) — se genera en el navegador, sin servidor
+     3 · AGENDAR
+     Dos caminos, porque no todo el mundo usa el mismo calendario:
+     · Google Calendar se abre con el evento ya escrito; solo hay
+       que pulsar Guardar. Es lo cómodo en Android y en el
+       computador.
+     · El archivo .ics es el formato estándar, para Apple Calendar
+       y Outlook. Se genera aquí mismo, sin servidor.
      ══════════════════════════════════════════════════════════ */
   function fechaICS(dt){ return dt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"; }
   function escapar(s){ return String(s).replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n"); }
 
-  $("icsBtn").addEventListener("click", function(){
-    var titulo = "Cumpleaños de " + C.persona.nombre + " " + C.persona.apellido;
-    var sitio  = C.lugar.nombre + ", " + C.lugar.direccion + ", " + C.lugar.ciudad;
-    var horas  = C.evento.recordatorioHorasAntes || 2;
+  function tituloEvento(){
+    return "Cumpleaños de " + C.persona.nombre + " " + C.persona.apellido;
+  }
+  function sitioEvento(){
+    return C.lugar.nombre + ", " + C.lugar.direccion + ", " + C.lugar.ciudad;
+  }
+
+  var calBtn  = $("calBtn");
+  var calMenu = $("calMenu");
+
+  function abrirMenu(v){
+    calMenu.hidden = !v;
+    calBtn.setAttribute("aria-expanded", v ? "true" : "false");
+  }
+
+  calBtn.addEventListener("click", function(e){
+    e.stopPropagation();
+    abrirMenu(calMenu.hidden);
+  });
+
+  // cerrar al tocar fuera o con Escape
+  document.addEventListener("click", function(e){
+    if (!calMenu.hidden && !calMenu.contains(e.target)) abrirMenu(false);
+  });
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape" && !calMenu.hidden){ abrirMenu(false); calBtn.focus(); }
+  });
+
+  /* — Google Calendar — */
+  $("calGoogle").addEventListener("click", function(){
+    abrirMenu(false);
+    var url = "https://calendar.google.com/calendar/render?action=TEMPLATE" +
+      "&text="     + encodeURIComponent(tituloEvento()) +
+      "&dates="    + fechaICS(INICIO) + "/" + fechaICS(FIN) +
+      "&details="  + encodeURIComponent(C.textos.pistaTexto) +
+      "&location=" + encodeURIComponent(sitioEvento());
+    window.open(url, "_blank", "noopener");
+  });
+
+  /* — archivo .ics — */
+  $("calIcs").addEventListener("click", function(){
+    abrirMenu(false);
+    var horas = C.evento.recordatorioHorasAntes || 2;
 
     var cuerpo = [
       "BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Portal Cumpleanos//ES","CALSCALE:GREGORIAN",
@@ -368,11 +413,11 @@
       "DTSTAMP:" + fechaICS(new Date()),
       "DTSTART:" + fechaICS(INICIO),
       "DTEND:"   + fechaICS(FIN),
-      "SUMMARY:"     + escapar(titulo),
-      "LOCATION:"    + escapar(sitio),
+      "SUMMARY:"     + escapar(tituloEvento()),
+      "LOCATION:"    + escapar(sitioEvento()),
       "DESCRIPTION:" + escapar(C.textos.pistaTexto),
       "BEGIN:VALARM","TRIGGER:-PT" + horas + "H","ACTION:DISPLAY",
-      "DESCRIPTION:" + escapar(titulo),
+      "DESCRIPTION:" + escapar(tituloEvento()),
       "END:VALARM","END:VEVENT","END:VCALENDAR"
     ].join("\r\n");
 
@@ -382,7 +427,7 @@
     a.download = "cumpleanos-" + C.persona.nombre.toLowerCase().replace(/\s+/g, "-") + ".ics";
     document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
-    aviso("Evento descargado · ábrelo para agendarlo");
+    aviso("Archivo descargado · ábrelo para agendarlo");
   });
 
   /* ══════════════════════════════════════════════════════════

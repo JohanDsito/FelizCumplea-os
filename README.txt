@@ -127,8 +127,13 @@ QUÉ INCLUYE
 · Aviso de respaldo si el teléfono bloquea el sonido
 · Diagnóstico de audio con ?debug
 · Datos del evento, con botones a Google Maps y a Waze
-· "Agendar": genera un archivo .ics en el navegador, con recordatorio
-  configurable. No requiere servidor
+· "Agendar" ofrece dos opciones:
+    – Google Calendar: abre el evento ya escrito, solo hay que
+      pulsar Guardar. Es lo cómodo en Android y en el computador.
+    – Apple · Outlook: descarga un archivo .ics generado en el
+      propio navegador, con recordatorio configurable desde
+      config.js (evento.recordatorioHorasAntes). El recordatorio
+      solo va en esta opción; en Google se configura al guardar.
 · Compartir mediante el menú nativo del teléfono, con copia del
   enlace como respaldo
 · Vista propia para escritorio

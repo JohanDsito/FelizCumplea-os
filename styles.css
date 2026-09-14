@@ -314,7 +314,39 @@ h1,h2,h3{
 }
 .btn-ghost:hover{background:rgba(184,134,47,.10);transform:translateY(-2px)}
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-1)}
-.btn-row .btn{padding:14px 12px;font-size:var(--t-sm)}
+.btn-row .btn{padding:14px 12px;font-size:var(--t-sm);width:100%}
+
+/* — menú de "Agendar" — */
+.cal-wrap{position:relative}
+.cal-menu{
+  position:absolute;left:0;right:0;top:calc(100% + 7px);z-index:12;
+  background:linear-gradient(170deg,#FFFCF7,var(--cream-2));
+  border:1px solid rgba(184,134,47,.42);border-radius:var(--r-md);
+  box-shadow:var(--sh-3);padding:5px;
+  min-width:186px;
+  animation:menuIn .22s var(--ease-out) both;
+}
+.cal-menu[hidden]{display:none}
+@keyframes menuIn{from{opacity:0;transform:translateY(-7px)}to{opacity:1;transform:none}}
+
+.cal-menu button{
+  display:flex;align-items:center;gap:10px;width:100%;
+  background:transparent;border:0;cursor:pointer;text-align:left;
+  font-family:"Karla",sans-serif;font-size:var(--t-sm);font-weight:600;
+  color:var(--ink);padding:11px 12px;border-radius:var(--r-sm);
+  transition:background .18s var(--ease);
+}
+.cal-menu button:hover{background:rgba(184,134,47,.13)}
+.cal-menu button:active{background:rgba(184,134,47,.2)}
+.cal-menu button svg{flex:0 0 auto;color:var(--gold)}
+.cal-menu button small{
+  display:block;font-size:11px;font-weight:400;
+  color:var(--ink-soft);letter-spacing:.01em;margin-top:1px;
+}
+.cal-menu button + button{
+  border-top:1px solid rgba(184,134,47,.2);margin-top:3px;padding-top:12px;
+  border-radius:0 0 var(--r-sm) var(--r-sm);
+}
 
 /* — bloque "qué te espera" — */
 .clue{text-align:center;margin:var(--s-6) 0 var(--s-4)}

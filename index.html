@@ -136,12 +136,33 @@
           Cómo llegar
         </a>
         <div class="btn-row">
-          <button class="btn btn-ghost" id="icsBtn" type="button">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
-              <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M12 14v4M10 16h4"/>
-            </svg>
-            Agendar
-          </button>
+          <!-- "Agendar" despliega las dos opciones: Google Calendar abre
+               el evento ya listo; el archivo .ics sirve para Apple y Outlook -->
+          <div class="cal-wrap">
+            <button class="btn btn-ghost" id="calBtn" type="button"
+                    aria-expanded="false" aria-haspopup="true" aria-controls="calMenu">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M12 14v4M10 16h4"/>
+              </svg>
+              Agendar
+            </button>
+
+            <div class="cal-menu" id="calMenu" role="menu" aria-label="Elige tu calendario" hidden>
+              <button type="button" role="menuitem" id="calGoogle">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>
+                </svg>
+                <span>Google Calendar</span>
+              </button>
+              <button type="button" role="menuitem" id="calIcs">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 3v12M8 11l4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>
+                </svg>
+                <span>Apple · Outlook<small>descarga un archivo</small></span>
+              </button>
+            </div>
+          </div>
+
           <a class="btn btn-ghost" id="wazeLink" href="#" target="_blank" rel="noopener">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
               <path d="M3 11l18-8-8 18-2-8-8-2z"/>
