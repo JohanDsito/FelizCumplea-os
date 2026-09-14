@@ -3,109 +3,232 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#7c4d26">
-<title>Una sorpresa para María Mercedes 🤎</title>
-<style>
-:root{
-  --cream:#f7efe3;--paper:#fffaf3;--brown:#59351f;--gold:#b58345;
-  --ink:#38261b;--soft:#ead9c1;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:#d8c3a6;color:var(--ink);font-family:Georgia,"Times New Roman",serif}
-.page{width:min(100%,560px);margin:auto;background:var(--cream);min-height:100vh;overflow:hidden}
-.hero{position:relative;height:64vh;min-height:500px;max-height:720px;overflow:hidden}
-.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(32,18,8,.05),rgba(32,18,8,.70));pointer-events:none}
-.hero img{width:100%;height:100%;object-fit:cover;object-position:center 32%;display:block}
-.hero-copy{position:absolute;z-index:2;left:0;right:0;bottom:0;padding:30px 24px 28px;color:white;text-align:center;text-shadow:0 2px 14px #0008}
-.kicker{font-size:13px;letter-spacing:.22em;text-transform:uppercase}
-.hero h1{font-size:clamp(34px,9vw,54px);margin:8px 0 3px;font-weight:400;font-style:italic}
-.hero p{margin:0;font-size:17px}
-.content{padding:28px 20px 40px}
-.intro{text-align:center}
-.script{font-size:39px;line-height:1.05;font-style:italic;color:var(--gold);margin:0 0 12px}
-.intro p{font-size:17px;line-height:1.6;margin:0 auto 22px;max-width:470px}
-.divider{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--gold);margin:22px 0}
-.divider:before,.divider:after{content:"";height:1px;background:var(--gold);opacity:.55;flex:1}
-.heart{font-size:20px}
-.info{background:var(--paper);border:1px solid var(--soft);border-radius:24px;padding:20px;box-shadow:0 12px 30px rgba(73,45,23,.10)}
-.row{display:flex;gap:15px;align-items:flex-start;padding:12px 0}
-.icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#ead8bd;font-size:20px;flex:0 0 38px}
-.label{font-size:12px;text-transform:uppercase;letter-spacing:.13em;color:#97704a}
-.value{font-size:18px;margin-top:3px;line-height:1.35}
-.mapbtn{display:flex;justify-content:center;align-items:center;gap:10px;margin-top:15px;background:linear-gradient(135deg,#a8753d,#70441f);color:#fff;text-decoration:none;border-radius:50px;padding:16px 22px;font-size:17px;box-shadow:0 8px 20px #70441f35}
-.clue{text-align:center;margin:34px 0 20px}
-.clue h2{font-size:35px;font-style:italic;font-weight:400;margin:0;color:var(--brown)}
-.clue p{font-size:17px;line-height:1.55;margin:9px 0}
-.music{background:#3f291b;color:#fff7ec;border-radius:26px;padding:23px 18px;margin-top:18px;box-shadow:0 14px 35px #4b2c1733}
-.music .small{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#e3c294}
-.music h3{font-size:26px;font-weight:400;margin:7px 0 3px}
-.music p{margin:0 0 16px;color:#eadac6}
-.player{background:#fffaf3;border-radius:16px;padding:13px;color:#3e2b1e}
-.player iframe{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:11px}
-.final{text-align:center;padding:35px 12px 10px}
-.final .big{font-size:27px;font-style:italic;color:var(--brown)}
-.final p{font-size:16px;line-height:1.6}
-.signature{font-size:25px;font-style:italic;color:var(--gold)}
-.note{font-size:12px!important;color:#806a54!important}
-</style>
+<meta name="theme-color" content="#241509">
+<title>Una sorpresa para María Mercedes</title>
+<meta name="description" content="Una celebración preparada especialmente para María Mercedes Tulcán Cabrera. Viernes 18 de septiembre de 2026, 12:00 p. m., Restaurante San Julian's, Pasto.">
+
+<!-- ════════════════════════════════════════════════════════════════════
+     OPEN GRAPH · así se ve el enlace al compartirlo por WhatsApp.
+     ⚠️ Estas etiquetas las lee WhatsApp ANTES de ejecutar JavaScript,
+     por eso son las únicas que no se pueden configurar desde config.js:
+     hay que escribirlas aquí a mano.
+     Y al publicar, reemplaza og:image por la URL absoluta real
+     (https://tudominio.com/assets/maria_mercedes.jpg).
+     ════════════════════════════════════════════════════════════════════ -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_CO">
+<meta property="og:title" content="Esta vez, la sorpresa es para ti 🤎">
+<meta property="og:description" content="María Mercedes: te esperamos el viernes 18 de septiembre, 12:00 p. m., en San Julian's. Ábrelo para descubrirlo.">
+<meta property="og:image" content="assets/maria_mercedes.jpg">
+<meta property="og:image:width" content="1284">
+<meta property="og:image:height" content="1496">
+<meta property="og:image:alt" content="María Mercedes Tulcán Cabrera">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23241509'/%3E%3Cpath d='M16 6c1.9 3.4 4.6 4.7 4.6 8.2A4.6 4.6 0 0 1 16 18.8a4.6 4.6 0 0 1-4.6-4.6C11.4 10.7 14.1 9.4 16 6z' fill='%23D9B86A'/%3E%3Crect x='14.7' y='19' width='2.6' height='7' rx='1.3' fill='%23FBF5EA'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="image" href="assets/maria_mercedes.jpg" fetchpriority="high">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=Karla:ital,wght@0,300..700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+
+<noscript><style>#veil{display:none!important}.rv{opacity:1!important;transform:none!important}</style></noscript>
 </head>
 <body>
-<main class="page">
-<section class="hero">
-<img src="maria_mercedes.jpg" alt="María Mercedes Tulcán Cabrera">
-<div class="hero-copy">
-<div class="kicker">Una sorpresa muy especial</div>
-<h1>¡Ahora sí puedes descubrirlo!</h1>
-<p>Porque hoy la sorpresa es para ti. 🤎</p>
-</div>
-</section>
 
-<section class="content">
-<div class="intro">
-<div class="script">María Mercedes</div>
-<p>Queremos celebrar la vida de una mujer que, con su liderazgo, compromiso y calidez, hace la diferencia.</p>
-</div>
+<!-- ═══════ EL SOBRE ═══════ -->
+<div id="veil">
+  <div class="env-wrap">
+    <p class="env-eyebrow" id="txtSobreEncabezado">Una sorpresa muy especial</p>
 
-<div class="divider"><span>♥</span></div>
+    <div class="envelope">
+      <div class="env-body"></div>
+      <div class="env-flap"></div>
+      <button class="seal" id="openBtn" aria-describedby="txtSobrePista">
+        <span id="txtIniciales" aria-hidden="true">MM</span>
+        <span class="sr-only">Abrir la invitación</span>
+      </button>
+    </div>
 
-<section class="info" aria-label="Información de la celebración">
-<div class="row"><div class="icon">📅</div><div><div class="label">Fecha</div><div class="value">18 de septiembre de 2026</div></div></div>
-<div class="row"><div class="icon">🕛</div><div><div class="label">Hora</div><div class="value">12:00 p. m.</div></div></div>
-<div class="row"><div class="icon">📍</div><div><div class="label">Lugar</div><div class="value">Restaurante San Julian’s</div><div class="value" style="font-size:16px">Calle 19A #42-18, Pandiaco, Pasto, Nariño</div></div></div>
-<a class="mapbtn" href="https://www.google.com/maps/search/?api=1&query=Restaurante+San+Julian%27s%2C+Cl.%2019A%20%2342-18%2C%20Pandiaco%2C%20Pasto%2C%20Nari%C3%B1o" target="_blank" rel="noopener">📍 DIRÍGETE AQUÍ&nbsp; →</a>
-</section>
-
-<div class="clue">
-<h2>¿Y qué te espera?</h2>
-<p>Una celebración preparada especialmente para ti…<br>con música, alegría y buena compañía.</p>
+    <div class="env-cta">
+      <p class="line" id="txtSobreTitulo">Ahora sí puedes descubrirlo</p>
+      <p class="hint" id="txtSobrePista">Toca el sello para abrir · sonará música</p>
+      <p class="env-loading" id="envLoading">Cargando la canción…</p>
+    </div>
+  </div>
 </div>
 
-<section class="music">
-<div class="small">🎶 Una pequeña pista</div>
-<h3>Tu Cumpleaños</h3>
-<p>Diomedes Díaz</p>
-<div class="player">
-<iframe id="music" src="https://www.youtube.com/embed/uO2k592UpPE?autoplay=1&playsinline=1&rel=0"
-title="Diomedes Díaz - Tu Cumpleaños (En Vivo)"
-allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen></iframe>
-</div>
-<p style="font-size:12px;margin:10px 2px 0;color:#d8c5ae">La música está integrada en esta página. Si tu navegador bloquea el inicio automático con sonido, toca una vez el reproductor.</p>
-</section>
+<!-- ═══════ LA INVITACIÓN ═══════ -->
+<main class="page" id="page">
 
-<div class="final">
-<div class="big">Esta vez, la sorpresa es para ti. 🤎</div>
-<p>La vida se celebra mejor con música, alegría y buena compañía.</p>
-<div>Con cariño,</div>
-<div class="signature">Tus funcionarios</div>
-</div>
-</section>
+  <header class="hero">
+    <img id="heroImg" src="assets/maria_mercedes.jpg"
+         alt="María Mercedes Tulcán Cabrera sonriendo en su oficina"
+         width="1284" height="1496" fetchpriority="high" decoding="async">
+    <div class="hero-copy">
+      <p class="kicker" id="txtHeroEncabezado">Esta vez la sorpresa es para ti</p>
+      <h1 id="txtHeroTitulo">Feliz cumpleaños</h1>
+      <p class="sub" id="txtHeroSubtitulo">Hoy celebramos tu vida. 🤎</p>
+    </div>
+  </header>
+
+  <!-- cuenta regresiva -->
+  <section class="countdown" id="countdown" aria-labelledby="cdLabel">
+    <p class="label" id="cdLabel">Faltan</p>
+    <div class="cd-grid" id="cdGrid" aria-hidden="true">
+      <div class="cd-cell"><span class="cd-num" id="cd-d">--</span><span class="cd-unit">Días</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-h">--</span><span class="cd-unit">Horas</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-m">--</span><span class="cd-unit">Min</span></div>
+      <div class="cd-cell"><span class="cd-num" id="cd-s">--</span><span class="cd-unit">Seg</span></div>
+    </div>
+    <p class="cd-today" id="cdDone" hidden>¡Hoy es el día!</p>
+    <p class="sr-only" id="cdSr" aria-live="polite" aria-atomic="true"></p>
+  </section>
+
+  <div class="content">
+
+    <div class="intro rv">
+      <h2 class="name" id="txtNombre">María Mercedes</h2>
+      <p class="surname" id="txtApellido">Tulcán Cabrera</p>
+      <p class="ded" id="txtDedicatoria">Queremos celebrar la vida de una mujer que, con su liderazgo, compromiso y calidez, hace la diferencia.</p>
+    </div>
+
+    <div class="divider rv" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5.4-8-11a4.6 4.6 0 0 1 8-3.1A4.6 4.6 0 0 1 20 10c0 5.6-8 11-8 11z"/></svg>
+    </div>
+
+    <!-- datos del evento -->
+    <section class="info rv" aria-labelledby="infoTitle">
+      <h2 class="sr-only" id="infoTitle">Información de la celebración</h2>
+
+      <div class="row">
+        <div class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/>
+          </svg>
+        </div>
+        <div>
+          <p class="label">Fecha</p>
+          <p class="value" id="txtFecha">Viernes 18 de septiembre</p>
+          <p class="value-sub" id="txtAnio">2026</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="12" cy="12" r="9"/><path d="M12 7v5.3l3.4 2"/>
+          </svg>
+        </div>
+        <div>
+          <p class="label">Hora</p>
+          <p class="value" id="txtHora">12:00 p. m.</p>
+          <p class="value-sub" id="txtHoraNota">Te esperamos puntual</p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 10.5c0 5.4-8 11.5-8 11.5s-8-6.1-8-11.5a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.3" r="2.7"/>
+          </svg>
+        </div>
+        <div>
+          <p class="label">Lugar</p>
+          <p class="value" id="txtLugar">Restaurante San Julian’s</p>
+          <p class="value-sub"><span id="txtDireccion">Calle 19A #42-18, Pandiaco</span><br><span id="txtCiudad">Pasto, Nariño</span></p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <a class="btn btn-primary" id="mapsLink" href="#" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10.5c0 5.4-8 11.5-8 11.5s-8-6.1-8-11.5a8 8 0 1 1 16 0z"/><circle cx="12" cy="10.3" r="2.7"/>
+          </svg>
+          Cómo llegar
+        </a>
+        <div class="btn-row">
+          <button class="btn btn-ghost" id="icsBtn" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true">
+              <rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18M12 14v4M10 16h4"/>
+            </svg>
+            Agendar
+          </button>
+          <a class="btn btn-ghost" id="wazeLink" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 11l18-8-8 18-2-8-8-2z"/>
+            </svg>
+            Waze
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="clue rv">
+      <h2 id="txtPistaTitulo">¿Y qué te espera?</h2>
+      <p id="txtPistaTexto">Una celebración preparada especialmente para ti… con música, alegría y buena compañía.</p>
+    </div>
+
+    <!-- música -->
+    <section class="music rv" id="musicSec" aria-labelledby="txtCancionTitulo">
+      <p class="small">Una pequeña pista</p>
+      <h3 id="txtCancionTitulo">Tu Cumpleaños</h3>
+      <p class="artist" id="txtCancionArtista">Diomedes Díaz</p>
+
+      <audio id="audio" preload="auto"></audio>
+
+      <div class="player">
+        <div class="vinyl" aria-hidden="true"></div>
+
+        <button class="play-btn" id="playBtn" type="button" data-playing="0" aria-label="Reproducir la música">
+          <svg class="ic-play" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5l13 7.5-13 7.5z"/></svg>
+          <svg class="ic-pause" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4h4v16H7zM13 4h4v16h-4z"/></svg>
+        </button>
+
+        <div class="player-main">
+          <input class="seek" id="seek" type="range" min="0" max="100" value="0" step="0.1"
+                 aria-label="Avanzar o retroceder en la canción">
+          <div class="times">
+            <span id="elapsed">0:00</span>
+            <span id="total">--:--</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="fail">No se pudo cargar la canción. Revisa que el archivo exista en la ruta indicada en <strong>config.js</strong>.</p>
+      <p class="note">La música se reproduce desde esta misma página. Puedes pausarla cuando quieras con el botón flotante.</p>
+    </section>
+
+    <div class="final">
+      <p class="big" id="txtCierreFrase">La vida se celebra mejor con música, alegría y buena compañía.</p>
+      <p id="txtCierreTexto">Gracias por todo lo que haces. Hoy la celebración es tuya.</p>
+      <p class="from" id="txtFirmaEncabezado">Con cariño</p>
+      <p class="signature" id="txtFirma">Tus funcionarios</p>
+    </div>
+  </div>
+
+  <div class="share-bar">
+    <button class="btn btn-ghost" id="shareBtn" type="button">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+        <path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
+      </svg>
+      Compartir la invitación
+    </button>
+  </div>
 </main>
-<script>
-/* Intentamos activar el reproductor al cargar. Los navegadores móviles pueden
-   bloquear audio automático; en ese caso el propio reproductor queda listo
-   para iniciar con el primer toque. */
-window.addEventListener('load',()=>{document.getElementById('music').focus({preventScroll:true});});
-</script>
+
+<!-- control flotante de música -->
+<button class="fab" id="fab" type="button" data-playing="0" aria-label="Reproducir la música">
+  <svg class="ic-play" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.5l13 7.5-13 7.5z"/></svg>
+  <svg class="ic-pause" width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4h4v16H7zM13 4h4v16h-4z"/></svg>
+</button>
+
+<div id="confetti" aria-hidden="true"></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
