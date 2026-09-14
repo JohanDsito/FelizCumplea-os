@@ -80,11 +80,52 @@ en el sitio. Para una invitación privada compartida por WhatsApp no
 suele ser un tema; tenlo en cuenta si la página se hiciera pública.
 
 
+SI LA MÚSICA NO SUENA EN EL CELULAR
+────────────────────────────────────────────────────────────────
+Los teléfonos son mucho más estrictos que un computador. Las causas
+habituales, en orden:
+
+1. iPhone con el interruptor lateral en silencio.
+   Es la causa número uno. Ese interruptor calla la música de las
+   páginas web. La página intenta sortearlo enrutando el sonido por
+   la Web Audio API, que suele sonar igual, pero no siempre.
+
+2. El volumen multimedia del teléfono está bajo.
+   Es un volumen distinto al del timbre. Súbelo mientras suena.
+
+3. La canción todavía se está descargando.
+   Con datos móviles lentos, los 5,3 MB tardan. Aparece el aviso
+   "Cargando la canción…" bajo el sobre.
+
+4. Modo de ahorro de datos activado.
+
+Si el sonido no arranca, la página no se queda callada sin más:
+muestra arriba un botón rojo "Toca aquí para escuchar la música".
+Tocarlo lo intenta de nuevo, y casi siempre funciona.
+
+PARA AVERIGUAR QUÉ PASA EN UN TELÉFONO CONCRETO:
+añade  ?debug  al final del enlace. Por ejemplo:
+
+    https://tusitio.com/?debug
+
+Aparece abajo un recuadro verde con el estado real del audio. Las
+líneas que importan:
+
+    carga     : debe llegar a "4 completo"
+    error     : debe decir "ninguno"
+    web audio : debe decir "running"
+    segundo   : debe ir subiendo
+
+Si "segundo" sube pero no se oye nada, el archivo está sonando y el
+problema es el silencio o el volumen del teléfono, no la página.
+
+
 QUÉ INCLUYE
 ────────────────────────────────────────────────────────────────
 · Sobre lacrado de apertura, con confeti
-· Cuenta regresiva en vivo (hora de Colombia, UTC-5)
 · Reproductor de música propio, con control flotante
+· Aviso de respaldo si el teléfono bloquea el sonido
+· Diagnóstico de audio con ?debug
 · Datos del evento, con botones a Google Maps y a Waze
 · "Agendar": genera un archivo .ics en el navegador, con recordatorio
   configurable. No requiere servidor
@@ -101,6 +142,8 @@ ACCESIBILIDAD
 · La cuenta regresiva se anuncia cada minuto, no cada segundo
 · Respeta "reducir movimiento" del sistema: sin confeti, sin
   animaciones y sin fundido de volumen
+· La cuenta regresiva se retiró a petición; las fechas de config.js
+  se siguen usando para el archivo de calendario
 · Navegable por teclado, con foco visible
 · Si el navegador no ejecuta JavaScript, se muestra la invitación
   completa sin el sobre

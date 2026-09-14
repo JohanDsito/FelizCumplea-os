@@ -236,39 +236,6 @@ h1,h2,h3{
 }
 .hero-copy .sub{margin:0;font-size:var(--t-base);color:#F0E2CE;text-shadow:0 2px 14px rgba(20,10,4,.8)}
 
-/* — cuenta regresiva — */
-.countdown{
-  background:linear-gradient(170deg,var(--espresso-2),var(--espresso));
-  color:var(--cream);padding:var(--s-4) var(--s-3) var(--s-5);text-align:center;
-  position:relative;
-}
-.countdown .label{
-  font-size:var(--t-xs);letter-spacing:.28em;text-transform:uppercase;
-  color:var(--gold-lite);margin:0 0 var(--s-3);
-}
-.cd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s-1);max-width:400px;margin:auto}
-.cd-cell{
-  background:rgba(251,245,234,.055);
-  border:1px solid rgba(217,184,106,.24);
-  border-radius:var(--r-md);padding:var(--s-2) 4px;
-}
-.cd-num{
-  font-family:"Fraunces",Georgia,serif;font-size:clamp(1.6rem,7.6vw,2.15rem);
-  font-variation-settings:"SOFT" 20,"opsz" 96;line-height:1;
-  color:#F7E9CE;font-variant-numeric:tabular-nums;display:block;
-}
-.cd-unit{
-  display:block;margin-top:7px;font-size:10px;letter-spacing:.18em;
-  text-transform:uppercase;color:#C9AC80;
-}
-.cd-num.tick{animation:tick .45s var(--ease)}
-@keyframes tick{0%{transform:translateY(-7px);opacity:.25}100%{transform:none;opacity:1}}
-
-.cd-today{
-  font-family:"Fraunces",Georgia,serif;font-style:italic;
-  font-variation-settings:"WONK" 1;font-size:var(--t-xl);color:var(--gold-lite);margin:0;
-}
-
 /* — contenido — */
 .content{padding:var(--s-6) var(--s-4) var(--s-5)}
 
@@ -506,6 +473,39 @@ h1,h2,h3{
   border:1.5px solid rgba(217,184,106,.5);animation:pulse 2.4s var(--ease) infinite;
 }
 
+/* ─── aviso de respaldo del audio ───────────────────────────────
+   Algunos teléfonos bloquean el sonido pese al toque en el sello
+   (el iPhone en silencio es el caso más común). En vez de fallar
+   sin decir nada, la página ofrece un segundo intento bien visible. */
+.audio-rescue{
+  position:fixed;left:50%;transform:translateX(-50%);
+  top:calc(12px + env(safe-area-inset-top,0px));z-index:48;
+  display:flex;align-items:center;gap:var(--s-2);text-align:left;
+  width:calc(100% - 24px);max-width:420px;
+  padding:13px var(--s-3);border:1px solid rgba(217,184,106,.45);
+  border-radius:var(--r-full);cursor:pointer;
+  background:linear-gradient(135deg,var(--rose),var(--rose-deep));
+  color:#FFF3F0;box-shadow:var(--sh-3);
+  font-family:"Karla",sans-serif;
+  animation:dropIn .6s var(--ease-out) both;
+}
+.audio-rescue[hidden]{display:none}
+.audio-rescue strong{display:block;font-size:var(--t-sm);font-weight:700;letter-spacing:.02em}
+.audio-rescue small{display:block;font-size:11px;opacity:.85;margin-top:1px}
+.audio-rescue svg{flex:0 0 auto}
+@keyframes dropIn{from{opacity:0;transform:translate(-50%,-18px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* panel de diagnóstico — solo visible añadiendo ?debug al enlace */
+.debug{
+  position:fixed;left:8px;bottom:8px;z-index:80;margin:0;
+  max-width:calc(100vw - 16px);max-height:52vh;overflow:auto;
+  background:rgba(10,6,2,.94);color:#9FE8A0;
+  border:1px solid #3B6B3C;border-radius:8px;padding:10px 12px;
+  font-family:ui-monospace,"Cascadia Mono",Menlo,monospace;font-size:11px;line-height:1.5;
+  white-space:pre-wrap;
+}
+.debug[hidden]{display:none}
+
 /* — confeti — */
 #confetti{position:fixed;inset:0;z-index:45;pointer-events:none;overflow:hidden}
 .conf{
@@ -532,7 +532,6 @@ h1,h2,h3{
   body{padding:0 var(--s-3)}
 }
 @media (max-width:359px){
-  .cd-grid{gap:5px}.cd-cell{padding:10px 2px}
   .btn-row{grid-template-columns:1fr}
   .vinyl{width:52px;height:52px;flex:0 0 52px}
 }

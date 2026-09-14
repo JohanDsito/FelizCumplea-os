@@ -22,9 +22,13 @@ window.CONFIG = {
   },
 
   /* ─── CUÁNDO ──────────────────────────────────────────────────────
+     Estas dos fechas son las que se guardan en el calendario cuando
+     alguien pulsa "Agendar". Lo que se lee en pantalla son los textos
+     de más abajo.
+
      Formato: "AAAA-MM-DDTHH:MM:SS-05:00"
-     El -05:00 final es la hora de Colombia. No lo quites: sin él, la
-     cuenta regresiva mostraría una hora distinta en cada país.
+     El -05:00 final es la hora de Colombia. No lo quites: sin él, a
+     quien esté en otro país se le guardaría a una hora distinta.
      Usa formato de 24 horas (las 12 del mediodía son las 12:00,
      las 8 de la noche son las 20:00).                               */
   evento: {
@@ -67,7 +71,7 @@ window.CONFIG = {
     // el sobre, antes de abrir
     sobreEncabezado : "Una sorpresa muy especial",
     sobreTitulo     : "Ahora sí puedes descubrirlo",
-    sobrePista      : "Toca el sello para abrir · sonará música",
+    sobrePista      : "Toca el sello para abrir",
 
     // sobre la fotografía
     heroEncabezado  : "Esta vez la sorpresa es para ti",
@@ -96,9 +100,8 @@ window.CONFIG = {
      Quien tenga activado “reducir movimiento” en su teléfono no verá
      animaciones aunque aquí estén encendidas. Es intencional.       */
   efectos: {
-    confeti        : true,
-    confetiPiezas  : 46,
-    cuentaRegresiva: true
+    confeti       : true,
+    confetiPiezas : 46
   },
 
   /* ─── COLORES ─────────────────────────────────────────────────────

@@ -19,6 +19,10 @@
     console.error('config.js: "evento.inicio" no es una fecha válida:', C.evento.inicio);
   }
 
+  // iPhone y iPad: son los que más restringen el audio
+  var esIOS = /iP(hone|ad|od)/.test(navigator.platform) ||
+              (navigator.userAgent.indexOf("Mac") > -1 && "ontouchend" in document);
+
   /* ══════════════════════════════════════════════════════════
      0 · VOLCAR LA CONFIGURACIÓN EN LA PÁGINA
      El index.html ya trae los textos escritos, para que la
@@ -95,20 +99,26 @@
         }
       }
     }
-
-    if (C.efectos.cuentaRegresiva === false){
-      var cd = $("countdown");
-      if (cd) cd.hidden = true;
-    }
   }
 
   aplicarConfig();
 
   /* ══════════════════════════════════════════════════════════
      1 · MÚSICA
-     Se reproduce el archivo de audio local indicado en config.js.
-     El navegador exige un gesto del usuario para dejar sonar
-     audio: ese gesto es el toque sobre el sello del sobre.
+     ──────────────────────────────────────────────────────────
+     Los teléfonos son mucho más estrictos que un computador:
+
+     · El iPhone, con el interruptor lateral en silencio, calla
+       cualquier etiqueta <audio> normal. La forma de sortearlo es
+       hacer pasar el sonido por la Web Audio API, que se enruta
+       por el canal de reproducción y sí suena.
+     · iOS y Android exigen que play() se llame de forma
+       inmediata dentro del toque, sin ningún paso intermedio.
+     · En datos móviles ignoran preload="auto", así que al tocar
+       el sello la canción puede no estar descargada todavía.
+
+     Por eso el orden de abajo es estricto, y si aun así no suena
+     se muestra un aviso para intentarlo de nuevo.
      ══════════════════════════════════════════════════════════ */
   var audio    = $("audio");
   var fab      = $("fab");
@@ -117,13 +127,120 @@
   var elapsed  = $("elapsed");
   var total    = $("total");
   var musicSec = $("musicSec");
-  var sonando  = false;
-  var buscando = false;   // el usuario está arrastrando la barra
+  var rescate  = $("audioRescue");
 
-  audio.src    = C.musica.archivo;
-  audio.loop   = C.musica.repetir !== false;
-  audio.volume = C.musica.volumen != null ? C.musica.volumen : 0.85;
-  audio.preload = "auto";   // empieza a descargar mientras se ve el sobre
+  var sonando  = false;
+  var buscando = false;          // el usuario arrastra la barra
+  var ctx = null, gain = null;   // Web Audio
+  var webAudioListo = false;
+
+  var VOLUMEN = C.musica.volumen != null ? C.musica.volumen : 0.85;
+  var FUNDIDO = C.musica.fundidoEntradaSegundos || 0;
+
+  audio.src     = C.musica.archivo;
+  audio.loop    = C.musica.repetir !== false;
+  audio.volume  = VOLUMEN;
+  audio.preload = "auto";
+  audio.setAttribute("playsinline", "");   // iOS: no abrir pantalla completa
+
+  /* Enruta el sonido por la Web Audio API.
+     Debe llamarse DENTRO del toque del usuario, nunca antes. */
+  function prepararWebAudio(){
+    if (webAudioListo) return true;
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    try{
+      ctx  = new AC();
+      var fuente = ctx.createMediaElementSource(audio);
+      gain = ctx.createGain();
+      gain.gain.value = VOLUMEN;
+      fuente.connect(gain);
+      gain.connect(ctx.destination);
+      webAudioListo = true;
+      return true;
+    }catch(e){
+      // si algo falla se sigue con el audio normal
+      ctx = null; gain = null; webAudioListo = false;
+      log("Web Audio no disponible: " + e.name);
+      return false;
+    }
+  }
+
+  function subirVolumenGradual(){
+    if (FUNDIDO <= 0 || reduced){
+      if (gain) gain.gain.value = VOLUMEN; else audio.volume = VOLUMEN;
+      return;
+    }
+    if (webAudioListo && ctx){
+      // en el iPhone audio.volume se ignora, pero el nodo de ganancia sí responde
+      var t0 = ctx.currentTime;
+      gain.gain.cancelScheduledValues(t0);
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.linearRampToValueAtTime(VOLUMEN, t0 + FUNDIDO);
+    } else {
+      audio.volume = 0;
+      var ini = performance.now();
+      var subir = function(now){
+        var k = Math.min((now - ini) / (FUNDIDO * 1000), 1);
+        audio.volume = VOLUMEN * k;
+        if (k < 1) requestAnimationFrame(subir);
+      };
+      requestAnimationFrame(subir);
+    }
+  }
+
+  /* El camino crítico. Se llama siempre desde un toque del usuario. */
+  function intentarReproducir(conFundido){
+    prepararWebAudio();
+    if (ctx && ctx.state === "suspended") ctx.resume();   // iOS lo exige aquí
+
+    if (conFundido) subirVolumenGradual();
+    else if (gain) gain.gain.value = VOLUMEN;
+    else audio.volume = VOLUMEN;
+
+    var intento = audio.play();                            // sin nada async antes
+
+    if (intento && intento.then){
+      intento.then(function(){ vigilarQueSuene(); })
+             .catch(function(err){
+               log("play() rechazado: " + (err && err.name));
+               mostrarRescate(err && err.name);
+             });
+    } else {
+      vigilarQueSuene();
+    }
+  }
+
+  /* Que play() no falle no garantiza que se oiga: en el iPhone en
+     silencio la reproducción "avanza" sin sonido audible. Aquí al
+     menos se detecta cuando ni siquiera avanza. */
+  function vigilarQueSuene(){
+    var t0 = audio.currentTime;
+    setTimeout(function(){
+      if (audio.paused || audio.currentTime === t0){
+        log("la reproducción no avanzó");
+        mostrarRescate("stalled");
+      } else {
+        ocultarRescate();
+      }
+    }, 1400);
+  }
+
+  function mostrarRescate(motivo){
+    marcarEstado(false);
+    $("audioRescueHint").textContent = esIOS
+      ? "Revisa el interruptor lateral de silencio"
+      : "Tu teléfono bloqueó el sonido · súbele el volumen";
+    rescate.hidden = false;
+    log("rescate visible (" + motivo + ")");
+  }
+
+  function ocultarRescate(){ rescate.hidden = true; }
+
+  rescate.addEventListener("click", function(){
+    ocultarRescate();
+    intentarReproducir(false);
+  });
 
   function mmss(seg){
     if (!isFinite(seg) || seg < 0) return "0:00";
@@ -149,55 +266,34 @@
     musicSec.classList.toggle("playing", v);
   }
 
-  /* sube el volumen poco a poco: entrar de golpe resulta agresivo */
-  function reproducir(conFundido){
-    var objetivo = C.musica.volumen != null ? C.musica.volumen : 0.85;
-    var dur = C.musica.fundidoEntradaSegundos;
-
-    if (conFundido && dur > 0 && !reduced){
-      audio.volume = 0;
-      var t0 = performance.now();
-      var subir = function(now){
-        var k = Math.min((now - t0) / (dur * 1000), 1);
-        audio.volume = objetivo * k;
-        if (k < 1) requestAnimationFrame(subir);
-      };
-      requestAnimationFrame(subir);
-    } else {
-      audio.volume = objetivo;
-    }
-
-    var intento = audio.play();
-    if (intento && intento.catch){
-      intento.catch(function(err){
-        // si el navegador igual lo bloquea, el botón queda listo
-        console.warn("El navegador no permitió iniciar el audio:", err && err.name);
-        marcarEstado(false);
-      });
-    }
-  }
-
   function alternar(){
-    if (audio.paused) reproducir(false);
+    if (audio.paused) intentarReproducir(false);
     else audio.pause();
   }
 
   audio.addEventListener("play",  function(){ marcarEstado(true);  });
+  audio.addEventListener("playing", function(){ marcarEstado(true); ocultarRescate(); });
   audio.addEventListener("pause", function(){ marcarEstado(false); });
   audio.addEventListener("timeupdate", pintarProgreso);
   audio.addEventListener("loadedmetadata", function(){
     total.textContent = mmss(audio.duration);
-    seek.max = 100;
     pintarProgreso();
   });
   audio.addEventListener("ended", function(){ if (!audio.loop) marcarEstado(false); });
   audio.addEventListener("error", function(){
     musicSec.classList.add("failed");
+    var e = audio.error;
+    log("error de audio: código " + (e && e.code));
     console.error("No se pudo cargar el audio:", C.musica.archivo);
   });
 
   fab.addEventListener("click", alternar);
   playBtn.addEventListener("click", alternar);
+
+  // al volver de segundo plano el iPhone suspende el contexto de audio
+  document.addEventListener("visibilitychange", function(){
+    if (!document.hidden && ctx && ctx.state === "suspended" && sonando) ctx.resume();
+  });
 
   // barra de progreso
   seek.addEventListener("input", function(){
@@ -234,8 +330,10 @@
     abierto = true;
     clearTimeout(avisoCarga);
 
+    // lo primero, sin nada por delante: los móviles solo lo permiten aquí
+    intentarReproducir(true);
+
     veil.classList.add("opening");
-    reproducir(true);                       // dentro del gesto de usuario
     if (C.efectos.confeti && !reduced) confeti();
 
     setTimeout(function(){
@@ -253,62 +351,7 @@
   veil.addEventListener("click", function(e){ if (e.target === veil) abrir(); });
 
   /* ══════════════════════════════════════════════════════════
-     3 · CUENTA REGRESIVA
-     ══════════════════════════════════════════════════════════ */
-  var cd = { d:$("cd-d"), h:$("cd-h"), m:$("cd-m"), s:$("cd-s") };
-  var previo = {}, srTick = 0;
-
-  function pad(n){ return n < 10 ? "0" + n : "" + n; }
-
-  function poner(el, val, clave){
-    var txt = pad(val);
-    if (previo[clave] === txt) return;
-    previo[clave] = txt;
-    el.textContent = txt;
-    if (!reduced){
-      el.classList.remove("tick");
-      void el.offsetWidth;            // fuerza reinicio de la animación
-      el.classList.add("tick");
-    }
-  }
-
-  function cuentaRegresiva(){
-    var falta = INICIO - Date.now();
-
-    if (falta <= 0){
-      $("cdGrid").hidden = true;
-      $("cdDone").hidden = false;
-      var enCurso = Date.now() < FIN;
-      $("cdLabel").textContent = enCurso ? "Ahora mismo" : "Y así fue";
-      $("cdDone").textContent  = enCurso
-        ? "¡La celebración es ahora!"
-        : "Gracias por celebrar con nosotros";
-      $("cdSr").textContent = $("cdDone").textContent;
-      return true;                    // detiene el intervalo
-    }
-
-    var s = Math.floor(falta / 1000);
-    var d = Math.floor(s / 86400),
-        h = Math.floor(s % 86400 / 3600),
-        m = Math.floor(s % 3600 / 60),
-        x = s % 60;
-
-    poner(cd.d, d, "d"); poner(cd.h, h, "h"); poner(cd.m, m, "m"); poner(cd.s, x, "s");
-
-    // el lector de pantalla se actualiza cada minuto, no cada segundo
-    if (srTick++ % 60 === 0){
-      $("cdSr").textContent = "Faltan " + d + " días, " + h + " horas y " + m + " minutos.";
-    }
-    return false;
-  }
-
-  if (C.efectos.cuentaRegresiva !== false && !isNaN(INICIO)){
-    cuentaRegresiva();
-    var reloj = setInterval(function(){ if (cuentaRegresiva()) clearInterval(reloj); }, 1000);
-  }
-
-  /* ══════════════════════════════════════════════════════════
-     4 · AGENDAR (.ics) — se genera en el navegador, sin servidor
+     3 · AGENDAR (.ics) — se genera en el navegador, sin servidor
      ══════════════════════════════════════════════════════════ */
   function fechaICS(dt){ return dt.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"; }
   function escapar(s){ return String(s).replace(/([,;\\])/g, "\\$1").replace(/\n/g, "\\n"); }
@@ -343,7 +386,7 @@
   });
 
   /* ══════════════════════════════════════════════════════════
-     5 · COMPARTIR
+     4 · COMPARTIR
      ══════════════════════════════════════════════════════════ */
   $("shareBtn").addEventListener("click", async function(){
     var datos = {
@@ -373,7 +416,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     6 · REVELADO AL HACER SCROLL
+     5 · REVELADO AL HACER SCROLL
      ══════════════════════════════════════════════════════════ */
   function revelar(){
     var items = document.querySelectorAll(".rv");
@@ -393,7 +436,7 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     7 · CONFETI
+     6 · CONFETI
      ══════════════════════════════════════════════════════════ */
   function confeti(){
     var host = $("confetti");
@@ -413,5 +456,47 @@
     }
     host.appendChild(trozo);
     setTimeout(function(){ host.innerHTML = ""; }, 7200);
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     7 · DIAGNÓSTICO
+     Añade ?debug al final del enlace para ver, en el propio
+     teléfono, por qué no está sonando la música.
+     Ejemplo:  https://tusitio.com/?debug
+     ══════════════════════════════════════════════════════════ */
+  var DEBUG = /[?&]debug\b/.test(location.search);
+  var registro = [];
+
+  function log(msg){
+    registro.push(msg);
+    if (DEBUG) pintarDebug();
+  }
+
+  function pintarDebug(){
+    var d = $("debug");
+    var e = audio.error;
+    var estados = ["0 vacío","1 metadatos","2 datos actuales","3 datos futuros","4 completo"];
+    d.textContent = [
+      "DIAGNÓSTICO DE AUDIO",
+      "─────────────────────────",
+      "archivo    : " + C.musica.archivo,
+      "carga      : " + (estados[audio.readyState] || audio.readyState),
+      "red        : " + audio.networkState + (audio.networkState === 3 ? " (sin fuente)" : ""),
+      "error      : " + (e ? "código " + e.code : "ninguno"),
+      "pausado    : " + audio.paused,
+      "segundo    : " + audio.currentTime.toFixed(1) + " / " + (isFinite(audio.duration) ? audio.duration.toFixed(0) : "?"),
+      "volumen    : " + audio.volume.toFixed(2) + (audio.muted ? " (SILENCIADO)" : ""),
+      "web audio  : " + (webAudioListo ? (ctx ? ctx.state : "?") : "no activa"),
+      "ganancia   : " + (gain ? gain.gain.value.toFixed(2) : "—"),
+      "iOS        : " + esIOS,
+      "─────────────────────────",
+      registro.slice(-8).join("\n") || "(sin incidencias)"
+    ].join("\n");
+  }
+
+  if (DEBUG){
+    $("debug").hidden = false;
+    pintarDebug();
+    setInterval(pintarDebug, 600);
   }
 })();
